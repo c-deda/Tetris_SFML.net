@@ -11,7 +11,7 @@ namespace Tetris
         QUIT
     };
 
-    class PauseState : State
+    public class PauseState : State
     {
         public Text pausedText { get; set; }
         public Text continueText { get; set; }

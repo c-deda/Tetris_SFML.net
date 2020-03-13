@@ -4,7 +4,7 @@ using System;
 
 namespace Tetris
 {
-    class GamePlayState : State
+    public class GamePlayState : State
     {
         public Tower tower { get; set; }
         public int level { get; set; }
@@ -15,6 +15,8 @@ namespace Tetris
         public Tetrimino nextPiece { get; set; }
         public Tetrimino heldPiece { get; set; }
         public BlockValue lastPiece { get; set; }
+        public BlockValue[] randomPieceBag { get; set; }
+        public int randomPieceIndex { get; set; }
         public bool canHold { get; set; }
 
         public Sprite gameBackground { get; set; }
@@ -235,10 +237,33 @@ namespace Tetris
         public void ResetGame()
         {
             tower = new Tower();
-            level = 1;
+            level = 0;
             totalLinesCleared = 0;
-            SpawnNextPiece();
+            randomPieceIndex = 0;
             canHold = true;
+            randomPieceBag = new BlockValue[] { BlockValue.ISHAPE,
+                                                BlockValue.JSHAPE,
+                                                BlockValue.LSHAPE,
+                                                BlockValue.OSHAPE,
+                                                BlockValue.SSHAPE,
+                                                BlockValue.TSHAPE,
+                                                BlockValue.ZSHAPE };
+
+            ShuffleRandomPieceBag();
+            SpawnNextPiece();
+        }
+
+        public void ShuffleRandomPieceBag()
+        {
+            var rand = new Random();
+
+            for (int i = 0; i < 7; i++)
+            {
+                int swapWith = rand.Next(7);
+                BlockValue temp = randomPieceBag[swapWith];
+                randomPieceBag[swapWith] = randomPieceBag[i];
+                randomPieceBag[i] = temp;
+            }
         }
 
         public void CheckLevelUp()
@@ -302,25 +327,22 @@ namespace Tetris
 
         public void SpawnNextPiece()
         {
-            var rand = new Random();
-
-            // Generate Random Value For New Piece
-            BlockValue newPiece = (BlockValue)rand.Next(7) + 1;
-            // If Piece Is Equal To Last Piece, Roll Once More
-            if (newPiece == lastPiece)
+            if (randomPieceIndex > 6)
             {
-                newPiece = (BlockValue)rand.Next(7) + 1;
+                randomPieceIndex = 0;
+                ShuffleRandomPieceBag();
             }
-            lastPiece = newPiece;
 
             if (nextPiece == null)
             {
-                nextPiece = GeneratePiece(newPiece);
+                nextPiece = GeneratePiece(randomPieceBag[randomPieceIndex]);
+                randomPieceIndex++;
             }
 
             activePiece = nextPiece;
             activePiece.Spawn();
-            nextPiece = GeneratePiece(newPiece);
+            nextPiece = GeneratePiece(randomPieceBag[randomPieceIndex]);
+            randomPieceIndex++;
 
             // Create Piece For Outline
             activeOutline = GeneratePiece(activePiece.GetBlockValue());

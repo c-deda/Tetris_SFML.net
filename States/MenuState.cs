@@ -10,14 +10,13 @@ namespace Tetris
         EXIT
     };
 
-    class MenuState : State
+    public class MenuState : State
     {
         public MenuSelection selection { get; set; }
         public Sprite menuBackground { get; set; }
         public RectangleShape selectionBox { get; set; }
         public Text startText { get; set; }
         public Text exitText { get; set; }
-        public bool canMove { get; set; }
 
         public override void Init(ref GameData data)
         {
