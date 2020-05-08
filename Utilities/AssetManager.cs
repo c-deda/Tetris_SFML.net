@@ -1,4 +1,5 @@
 ﻿using SFML.Graphics;
+using SFML.Audio;
 
 namespace Tetris
 {
@@ -10,6 +11,11 @@ namespace Tetris
         public Texture previewImageTexture { get; }
         public Font menuFont { get; }
         public Font gameFont { get; }
+        public SoundBuffer menuMoveSound { get; }
+        public SoundBuffer menuSelectSound { get; }
+        public SoundBuffer lineClearSound { get; }
+        public SoundBuffer gameOverSound { get; }
+        public SoundBuffer rotateSound { get; }
 
         public AssetManager()
         {
@@ -19,8 +25,17 @@ namespace Tetris
             outlineTexture = new Texture(Constants.OUTLINE_PATH);
             previewImageTexture = new Texture(Constants.TETRIMINOS_PATH);
 
-            // Load Fonts;
+            // Load Fonts
             gameFont = new Font(Constants.VCR_PATH);
+
+            // Load Sounds
+            menuMoveSound = new SoundBuffer(Constants.UI_MOVE_PATH);
+            menuSelectSound = new SoundBuffer(Constants.UI_SELECT_PATH);
+            lineClearSound = new SoundBuffer(Constants.LINE_CLEAR_PATH);
+            gameOverSound = new SoundBuffer(Constants.GAME_OVER_PATH);
+            rotateSound = new SoundBuffer(Constants.ROTATE_PATH);
         }
+
+
     }
 }

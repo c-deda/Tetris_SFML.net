@@ -19,7 +19,7 @@ namespace Tetris
             isReplacing = false;
         }
 
-        public void addState(State newState, bool isReplacing)
+        public void AddState(State newState, bool isReplacing)
         {
             this.isAdding = true;
             this.isReplacing = isReplacing;
@@ -27,11 +27,9 @@ namespace Tetris
 
         }
 
-        public void removeState(State newState, bool isReplacing)
+        public void RemoveState()
         {
             this.isRemoving = true;
-            this.isReplacing = isReplacing;
-            this.newActiveState = newState;
         }
 
         public State GetActiveState()
@@ -46,23 +44,11 @@ namespace Tetris
             {
                 gameStates.Pop();
 
-                if (GetActiveState().ToString() == newActiveState.ToString())
+                isRemoving = false;
+
+                if (!gameStates.Any())
                 {
-                    if (isReplacing)
-                    {
-                        gameStates.Pop();
-                        gameStates.Push(newActiveState);
-                        newActiveState.Init(ref data);
-                        isReplacing = false;
-                    }
-
-                    isRemoving = false;
-                    newActiveState = null;
-
-                    if (!gameStates.Any())
-                    {
-                        data.window.Close();
-                    }
+                    data.window.Close();
                 }
             }
             // Adding States

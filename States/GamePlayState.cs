@@ -1,5 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.System;
+using SFML.Audio;
 using System;
 
 namespace Tetris
@@ -30,6 +31,11 @@ namespace Tetris
         public Text linesValueText { get; set; }
         public Text levelLabelText { get; set; }
         public Text levelValueText { get; set; }
+        public Sound blockLandingSound { get; set; }
+        public Sound gameOverSound { get; set; }
+        public Sound rotateSound { get; set; }
+        public Sound holdSound { get; set; }
+        public Sound lineClearSound { get; set; }
 
         public override void Init(ref GameData data)
         {
@@ -54,6 +60,12 @@ namespace Tetris
             levelLabelText.Position = new Vector2f((levelLabelText.GetGlobalBounds().Width / 2) - Constants.BLOCK_SIZE, Constants.BLOCK_SIZE * 10);
             linesLabelText = new Text("Lines", data.asset.gameFont);
             linesLabelText.Position = new Vector2f(Constants.WIN_WIDTH - linesLabelText.GetGlobalBounds().Width - (Constants.BLOCK_SIZE / 2), Constants.BLOCK_SIZE * 10);
+            // Sounds
+            blockLandingSound = new Sound(data.asset.menuMoveSound);
+            holdSound = new Sound(data.asset.menuSelectSound);
+            rotateSound = new Sound(data.asset.rotateSound);
+            gameOverSound = new Sound(data.asset.gameOverSound);
+            lineClearSound = new Sound(data.asset.lineClearSound);
 
             ResetGame();
         }
@@ -67,6 +79,9 @@ namespace Tetris
                     break;
                 case SFML.Window.Keyboard.Key.Right:
                     LegalMoveLeftRight(1);
+                    break;
+                case SFML.Window.Keyboard.Key.Down:
+                    LegalMoveUpDown(activePiece, 1);
                     break;
                 case SFML.Window.Keyboard.Key.F:
                     TryRotate(activePiece, true);
@@ -82,7 +97,7 @@ namespace Tetris
                     DropActivePiece();
                     break;
                 case SFML.Window.Keyboard.Key.Escape:
-                    data.state.addState(new PauseState(), false);
+                    data.state.AddState(new PauseState(), false);
                     break;
             }
         }
@@ -92,7 +107,8 @@ namespace Tetris
             // Check Game Over
             if (IsGameOver())
             {
-                data.state.addState(new GameOverState(), false);
+                gameOverSound.Play();
+                data.state.AddState(new GameOverState(), true);
             }
             // Gravity
             frameCount++;
@@ -102,6 +118,14 @@ namespace Tetris
                 frameCount = 0;
             }
             // Check And Clear Lines
+            if (tower.clearState == ClearState.CLEAR)
+            {
+                lineClearSound.Play();
+            }
+            else if (tower.clearState == ClearState.MOVE)
+            {
+                blockLandingSound.Play();
+            }
             totalLinesCleared += tower.ClearCycle();
 
             CheckLevelUp();
@@ -390,6 +414,8 @@ namespace Tetris
                     activePiece.Spawn();
                     activeOutline = GeneratePiece(activePiece.GetBlockValue());
                 }
+
+                holdSound.Play();
             }
 
             canHold = false;
@@ -419,6 +445,7 @@ namespace Tetris
 
         public void DropActivePiece()
         {
+            blockLandingSound.Play();
             activePiece.CopyValuesToTower(tower);
             SpawnNextPiece();
             canHold = true;
@@ -500,9 +527,10 @@ namespace Tetris
                     case 5:
                         piece.MoveUpDown(2);
                         break;
-
                 }
             }
+
+            rotateSound.Play();
         }
     }
 }

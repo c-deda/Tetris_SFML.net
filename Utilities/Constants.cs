@@ -15,10 +15,15 @@
         public const int MIN_GRAVITY = 55;
         public const int GRAVITY_MOD = 5;
         public const int LINES_MOD = 10;
-        public const string BLOCKS_PATH = "../../Assets/Tetris_Blocks.png";
-        public const string OUTLINE_PATH = "../../Assets/Tetris_Outlines.png";
-        public const string BACKGROUNDS_PATH = "../../Assets/Tetris_Backgrounds.png";
-        public const string TETRIMINOS_PATH = "../../Assets/Tetris_Tetriminos.png";
-        public const string VCR_PATH = "../../Assets/VCR.ttf";
+        public const string BLOCKS_PATH = "../../Assets/Textures/Tetris_Blocks.png";
+        public const string OUTLINE_PATH = "../../Assets/Textures/Tetris_Outlines.png";
+        public const string BACKGROUNDS_PATH = "../../Assets/Textures/Tetris_Backgrounds.png";
+        public const string TETRIMINOS_PATH = "../../Assets/Textures/Tetris_Tetriminos.png";
+        public const string VCR_PATH = "../../Assets/Fonts/VCR.ttf";
+        public const string UI_MOVE_PATH = "../../Assets/Sounds/UI_Move.wav";
+        public const string UI_SELECT_PATH = "../../Assets/Sounds/UI_Select.wav";
+        public const string LINE_CLEAR_PATH = "../../Assets/Sounds/Line_Clear.wav";
+        public const string GAME_OVER_PATH = "../../Assets/Sounds/Game_Over.wav";
+        public const string ROTATE_PATH = "../../Assets/Sounds/Rotate.wav";
     }
 }

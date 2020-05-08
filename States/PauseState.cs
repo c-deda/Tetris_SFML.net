@@ -1,5 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.System;
+using SFML.Audio;
 using System;
 
 namespace Tetris
@@ -17,6 +18,8 @@ namespace Tetris
         public Text continueText { get; set; }
         public Text restartText { get; set; }
         public Text quitText { get; set; }
+        public Sound moveSound { get; set; }
+        public Sound selectSound { get; set; }
 
         public PauseSelection pauseSelection;
         public RectangleShape selectionBox;
@@ -35,6 +38,8 @@ namespace Tetris
             restartText.Position = new Vector2f((Constants.WIN_WIDTH / 2) - (restartText.GetGlobalBounds().Width / 2), (Constants.WIN_HEIGHT / 2) + 50);
             quitText = new Text("Quit", data.asset.gameFont);
             quitText.Position = new Vector2f((Constants.WIN_WIDTH / 2) - (quitText.GetGlobalBounds().Width / 2), (Constants.WIN_HEIGHT / 2) + 150);
+            moveSound = new Sound(data.asset.menuMoveSound);
+            selectSound = new Sound(data.asset.menuSelectSound);
         }
 
         public override void HandleInput(ref GameData data, SFML.Window.KeyEventArgs e)
@@ -88,6 +93,8 @@ namespace Tetris
             {
                 pauseSelection = (PauseSelection)(((selectionInt + 1) + selectionCount) % selectionCount);
             }
+
+            moveSound.Play();
         }
 
         public void UpdateSelectionBox()
@@ -116,15 +123,18 @@ namespace Tetris
             switch (pauseSelection)
             {
                 case PauseSelection.CONTINUE:
-                    data.state.removeState(new GamePlayState(), false);
+                    data.state.RemoveState();
                     break;
                 case PauseSelection.RESTART:
-                    data.state.removeState(new GamePlayState(), true);
+                    data.state.AddState(new GamePlayState(), true);
                     break;
                 case PauseSelection.QUIT:
-                    data.state.removeState(new MenuState(), false);
+                    data.state.RemoveState();
+                    data.state.AddState(new MenuState(), true);
                     break;
             }
+
+            selectSound.Play();
         }
     }
 }

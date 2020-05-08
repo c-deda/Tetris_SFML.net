@@ -39,7 +39,7 @@ namespace Tetris
             data = new GameData();
 
             // Initial State
-            data.state.addState(new MenuState(), false);
+            data.state.AddState(new MenuState(), false);
 
             // Setup Event Handlers
             data.window.Closed += (sender, e) => data.input.OnClosed(sender, e);

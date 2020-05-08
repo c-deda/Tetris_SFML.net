@@ -1,5 +1,6 @@
 ﻿using SFML.Graphics;
 using SFML.System;
+using SFML.Audio;
 using System;
 
 namespace Tetris
@@ -17,6 +18,8 @@ namespace Tetris
         public RectangleShape selectionBox { get; set; }
         public Text startText { get; set; }
         public Text exitText { get; set; }
+        public Sound moveSound { get; set; }
+        public Sound selectSound { get; set; }
 
         public override void Init(ref GameData data)
         {
@@ -29,6 +32,8 @@ namespace Tetris
             startText.Position = new Vector2f((data.window.Size.X / 2) - (startText.GetGlobalBounds().Width / 2), (data.window.Size.Y / 2));
             exitText = new Text("Exit", data.asset.gameFont);
             exitText.Position = new Vector2f((data.window.Size.X / 2) - (exitText.GetGlobalBounds().Width / 2), (data.window.Size.Y / 2) + 90);
+            moveSound = new Sound(data.asset.menuMoveSound);
+            selectSound = new Sound(data.asset.menuSelectSound);
         }
 
         public override void HandleInput(ref GameData data, SFML.Window.KeyEventArgs e)
@@ -94,6 +99,8 @@ namespace Tetris
             {
                 selection = (MenuSelection)(((selectionInt + 1) + selectionCount) % selectionCount);
             }
+
+            moveSound.Play();
         }
 
         public void EnterSelection(ref GameData data)
@@ -101,12 +108,14 @@ namespace Tetris
             switch (selection)
             {
                 case MenuSelection.START:
-                    data.state.addState(new GamePlayState(), false);
+                    data.state.AddState(new GamePlayState(), true);
                     break;
                 case MenuSelection.EXIT:
                     data.window.Close();
                     break;
             }
+
+            selectSound.Play();
         }
     }
 }

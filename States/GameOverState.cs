@@ -25,7 +25,7 @@ namespace Tetris
             switch (e.Code)
             {
                 case SFML.Window.Keyboard.Key.Escape:
-                    data.state.removeState(new GamePlayState(), true);
+                    data.state.AddState(new GamePlayState(), true);
                     break;
             }
         }
