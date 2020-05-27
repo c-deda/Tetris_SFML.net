@@ -7,36 +7,36 @@ namespace Tetris
 {
     public enum MenuSelection
     {
-        START,
-        EXIT
+        Start,
+        Exit
     };
 
     public class MenuState : State
     {
-        public MenuSelection selection { get; set; }
-        public Sprite menuBackground { get; set; }
-        public RectangleShape selectionBox { get; set; }
-        public Text startText { get; set; }
-        public Text exitText { get; set; }
-        public Sound moveSound { get; set; }
-        public Sound selectSound { get; set; }
+        private MenuSelection _selection;
+        private Sprite _menuBackground;
+        private RectangleShape _selectionBox;
+        private Text _startText;
+        private Text _exitText;
+        private Sound _moveSound;
+        private Sound _selectSound;
 
-        public override void Init(ref GameData data)
+        public override void Init(GameData data)
         {
             // Initialize Menu Selection
-            selection = MenuSelection.START;
+            _selection = MenuSelection.Start;
 
             // Setup Assets
-            menuBackground = new Sprite(data.asset.backgroundTexture, new IntRect(0, 0, Constants.WIN_WIDTH, Constants.WIN_HEIGHT));
-            startText = new Text("Start", data.asset.gameFont);
-            startText.Position = new Vector2f((data.window.Size.X / 2) - (startText.GetGlobalBounds().Width / 2), (data.window.Size.Y / 2));
-            exitText = new Text("Exit", data.asset.gameFont);
-            exitText.Position = new Vector2f((data.window.Size.X / 2) - (exitText.GetGlobalBounds().Width / 2), (data.window.Size.Y / 2) + 90);
-            moveSound = new Sound(data.asset.menuMoveSound);
-            selectSound = new Sound(data.asset.menuSelectSound);
+            _menuBackground = new Sprite(data.Asset.BackgroundTexture, new IntRect(0, 0, Constants.WindowWidth, Constants.WindowHeight));
+            _startText = new Text("Start", data.Asset.GameFont);
+            _startText.Position = new Vector2f((data.Window.Size.X / 2) - (_startText.GetGlobalBounds().Width / 2), (data.Window.Size.Y / 2));
+            _exitText = new Text("Exit", data.Asset.GameFont);
+            _exitText.Position = new Vector2f((data.Window.Size.X / 2) - (_exitText.GetGlobalBounds().Width / 2), (data.Window.Size.Y / 2) + 90);
+            _moveSound = new Sound(data.Asset.MenuMoveSound);
+            _selectSound = new Sound(data.Asset.MenuSelectSound);
         }
 
-        public override void HandleInput(ref GameData data, SFML.Window.KeyEventArgs e)
+        public override void HandleInput(GameData data, SFML.Window.KeyEventArgs e)
         {
             switch (e.Code)
             {
@@ -47,75 +47,75 @@ namespace Tetris
                     ChangeSelection(false);
                     break;
                 case SFML.Window.Keyboard.Key.Return:
-                    EnterSelection(ref data);
+                    EnterSelection(data);
                     break;
             }
         }
 
-        public override void Update(ref GameData data)
+        public override void Update(GameData data)
         {
             UpdateSelectionBox();
         }
 
-        public override void Draw(ref GameData data)
+        public override void Draw(GameData data)
         {
-            data.window.Clear();
+            data.Window.Clear();
 
-            data.window.Draw(menuBackground);
-            data.window.Draw(startText);
-            data.window.Draw(exitText);
-            data.window.Draw(selectionBox);
+            data.Window.Draw(_menuBackground);
+            data.Window.Draw(_startText);
+            data.Window.Draw(_exitText);
+            data.Window.Draw(_selectionBox);
 
-            data.window.Display();
+            data.Window.Display();
         }
 
         public void UpdateSelectionBox()
         {
-            switch (selection)
+            switch (_selection)
             {
-                case MenuSelection.START:
-                    selectionBox = new RectangleShape(new Vector2f(startText.GetGlobalBounds().Width + 10, (startText.GetGlobalBounds().Height) * 2));
-                    selectionBox.Position = new Vector2f(startText.GetGlobalBounds().Left - 6, startText.GetGlobalBounds().Top - 6);
+                case MenuSelection.Start:
+                    _selectionBox = new RectangleShape(new Vector2f(_startText.GetGlobalBounds().Width + 10, (_startText.GetGlobalBounds().Height) * 2));
+                    _selectionBox.Position = new Vector2f(_startText.GetGlobalBounds().Left - 6, _startText.GetGlobalBounds().Top - 6);
                     break;
-                case MenuSelection.EXIT:
-                    selectionBox = new RectangleShape(new Vector2f(exitText.GetGlobalBounds().Width + 10, (exitText.GetGlobalBounds().Height) * 2));
-                    selectionBox.Position = new Vector2f(exitText.GetGlobalBounds().Left - 6, exitText.GetGlobalBounds().Top - 6);
+                case MenuSelection.Exit:
+                    _selectionBox = new RectangleShape(new Vector2f(_exitText.GetGlobalBounds().Width + 10, (_exitText.GetGlobalBounds().Height) * 2));
+                    _selectionBox.Position = new Vector2f(_exitText.GetGlobalBounds().Left - 6, _exitText.GetGlobalBounds().Top - 6);
                     break;
             }
 
-            selectionBox.FillColor = new Color(255, 255, 255, 60);
+            _selectionBox.FillColor = new Color(255, 255, 255, 60);
         }
 
         public void ChangeSelection(bool up)
         {
             int selectionCount = Enum.GetNames(typeof(MenuSelection)).Length;
-            int selectionInt = (int)selection;
+            int selectionInt = (int)_selection;
 
             if (up)
             {
-                selection = (MenuSelection)(((selectionInt - 1) + selectionCount) % selectionCount);
+                _selection = (MenuSelection)(((selectionInt - 1) + selectionCount) % selectionCount);
             }
             else
             {
-                selection = (MenuSelection)(((selectionInt + 1) + selectionCount) % selectionCount);
+                _selection = (MenuSelection)(((selectionInt + 1) + selectionCount) % selectionCount);
             }
 
-            moveSound.Play();
+            _moveSound.Play();
         }
 
-        public void EnterSelection(ref GameData data)
+        public void EnterSelection(GameData data)
         {
-            switch (selection)
+            switch (_selection)
             {
-                case MenuSelection.START:
-                    data.state.AddState(new GamePlayState(), true);
+                case MenuSelection.Start:
+                    data.State.AddState(new GamePlayState(), true);
                     break;
-                case MenuSelection.EXIT:
-                    data.window.Close();
+                case MenuSelection.Exit:
+                    data.Window.Close();
                     break;
             }
 
-            selectSound.Play();
+            _selectSound.Play();
         }
     }
 }

@@ -2,18 +2,18 @@
 {
     public abstract class Tetrimino
     {
-        protected Block[] blocks;
-        protected int rotationIndex;
+        protected Block[] _blocks;
+        protected int _rotationIndex;
 
         public Tetrimino()
         {
-            blocks = new Block[4];
+            _blocks = new Block[4];
         }
 
         // - Up and + Down
         public void MoveUpDown(int val)
         {
-            foreach (Block b in blocks)
+            foreach (Block b in _blocks)
             {
                 b.Move(new Position(b.GetCol(), b.GetRow() + val));
             }
@@ -22,7 +22,7 @@
         // - Left and + Right
         public void MoveLeftRight(int val)
         {
-            foreach (Block b in blocks)
+            foreach (Block b in _blocks)
             {
                 b.Move(new Position(b.GetCol() + val, b.GetRow()));
             }
@@ -32,21 +32,21 @@
         {
             if (clockwise)
             {
-                rotationIndex++;
+                _rotationIndex++;
             }
             else
             {
-                rotationIndex--;
+                _rotationIndex--;
             }
 
-            rotationIndex = (rotationIndex + Constants.ROTATION_VALUES) % Constants.ROTATION_VALUES;
+            _rotationIndex = (_rotationIndex + Constants.TotalRotationValues) % Constants.TotalRotationValues;
         }
 
         public void Despawn()
         {
-            foreach (Block b in blocks)
+            foreach (Block b in _blocks)
             {
-                b.Move(new Position(Constants.DESPAWNED_POS, Constants.DESPAWNED_POS));
+                b.Move(new Position(Constants.DespawnedPosition, Constants.DespawnedPosition));
             }
         }
 
@@ -54,7 +54,7 @@
         {
             for (int i = 0; i < 4; i++)
             {
-                if (blocks[i].GetCol() == x && blocks[i].GetRow() == y)
+                if (_blocks[i].GetCol() == x && _blocks[i].GetRow() == y)
                 {
                     return true;
                 }
@@ -65,19 +65,19 @@
 
         public Block GetBlockAt(int i)
         {
-            return blocks[i];
+            return _blocks[i];
         }
 
         // Bounds Of Tower Adapts To Blocks Added To Tower
         public bool IsInBounds(Tower tower)
         {
-            foreach (Block b in blocks)
+            foreach (Block b in _blocks)
             {
-                if (b.GetCol() < 0 || b.GetCol() >= Constants.TOWER_WIDTH || b.GetRow() < 0 || b.GetRow() >= Constants.TOWER_HEIGHT)
+                if (b.GetCol() < 0 || b.GetCol() >= Constants.TowerWidth || b.GetRow() < 0 || b.GetRow() >= Constants.TowerHeight)
                 {
                     return false;
                 }
-                else if (tower.GetTile(b.GetRow(), b.GetCol()) != BlockValue.EMPTY)
+                else if (tower.GetTile(b.GetRow(), b.GetCol()) != BlockValue.Empty)
                 {
                     return false;
                 }
@@ -88,21 +88,22 @@
 
         public BlockValue GetBlockValue()
         {
-            return blocks[0].type;
+            return _blocks[0].Type;
         }
 
         public void MakeCopy(Tetrimino copy)
         {
-            copy.rotationIndex = this.rotationIndex;
+            copy._rotationIndex = this._rotationIndex;
+
             for (int i = 0; i < 4; i++)
             {
-                copy.blocks[i].Move(new Position(this.blocks[i].GetCol(), this.blocks[i].GetRow()));
+                copy._blocks[i].Move(new Position(this._blocks[i].GetCol(), this._blocks[i].GetRow()));
             }
         }
 
-        public void CopyValuesToTower(Tower tower)
+        public void CopyValuesToTowerData(Tower tower)
         {
-            foreach (Block b in blocks)
+            foreach (Block b in _blocks)
             {
                 tower.AddBlock(b);
             }

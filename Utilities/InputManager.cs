@@ -11,9 +11,9 @@ namespace Tetris
             window.Close();
         }
 
-        public void HandleKeyPressed(object sender, SFML.Window.KeyEventArgs e, ref GameData data)
+        public void HandleKeyPressed(object sender, SFML.Window.KeyEventArgs e, GameData data)
         {
-            data.state.GetActiveState().HandleInput(ref data, e);
+            data.State.GetActiveState().HandleInput(data, e);
         }
     }
 }

@@ -5,71 +5,71 @@ namespace Tetris
 {
     public class StateManager
     {
-        private Stack<State> gameStates;
-        public State newActiveState { get; set; }
-        public bool isAdding { get; set; }
-        public bool isRemoving { get; set; }
-        public bool isReplacing { get; set; }
+        private Stack<State> _gameStates;
+        public State NewActiveState { get; private set; }
+        public bool IsAdding { get; private set; }
+        public bool IsRemoving { get; private set; }
+        public bool IsReplacing { get; private set; }
 
         public StateManager()
         {
-            gameStates = new Stack<State>();
-            isAdding = false;
-            isRemoving = false;
-            isReplacing = false;
+            _gameStates = new Stack<State>();
+            IsAdding = false;
+            IsRemoving = false;
+            IsReplacing = false;
         }
 
         public void AddState(State newState, bool isReplacing)
         {
-            this.isAdding = true;
-            this.isReplacing = isReplacing;
-            this.newActiveState = newState;
+            IsAdding = true;
+            IsReplacing = isReplacing;
+            NewActiveState = newState;
 
         }
 
         public void RemoveState()
         {
-            this.isRemoving = true;
+            IsRemoving = true;
         }
 
         public State GetActiveState()
         {
-            return gameStates.Peek();
+            return _gameStates.Peek();
         }
 
-        public void ProcessStateChanges(ref GameData data)
+        public void ProcessStateChanges(GameData data)
         {
             // Removing States
-            while (isRemoving && gameStates.Any())
+            while (IsRemoving && _gameStates.Any())
             {
-                gameStates.Pop();
+                _gameStates.Pop();
 
-                isRemoving = false;
+                IsRemoving = false;
 
-                if (!gameStates.Any())
+                if (!_gameStates.Any())
                 {
-                    data.window.Close();
+                    data.Window.Close();
                 }
             }
             // Adding States
-            if (isAdding)
+            if (IsAdding)
             {
-                if (gameStates.Any())
+                if (_gameStates.Any())
                 {
-                    if (isReplacing)
+                    if (IsReplacing)
                     {
-                        gameStates.Pop();
-                        isReplacing = false;
+                        _gameStates.Pop();
+                        IsReplacing = false;
                     }
                 }
 
-                if (newActiveState != null)
+                if (NewActiveState != null)
                 {
-                    gameStates.Push(newActiveState);
-                    newActiveState.Init(ref data);
+                    _gameStates.Push(NewActiveState);
+                    NewActiveState.Init(data);
                 }
 
-                isAdding = false;
+                IsAdding = false;
             }
         }
     }

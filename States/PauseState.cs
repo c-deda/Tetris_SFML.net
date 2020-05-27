@@ -7,42 +7,42 @@ namespace Tetris
 {
     public enum PauseSelection
     {
-        CONTINUE,
-        RESTART,
-        QUIT
+        Continue,
+        Restart,
+        Quit
     };
 
     public class PauseState : State
     {
-        public Text pausedText { get; set; }
-        public Text continueText { get; set; }
-        public Text restartText { get; set; }
-        public Text quitText { get; set; }
-        public Sound moveSound { get; set; }
-        public Sound selectSound { get; set; }
+        private Text _pausedText;
+        private Text _continueText;
+        private Text _restartText;
+        private Text _quitText;
+        private Sound _moveSound;
+        private Sound _selectSound;
 
         public PauseSelection pauseSelection;
         public RectangleShape selectionBox;
 
-        public override void Init(ref GameData data)
+        public override void Init(GameData data)
         {
             // Initialize Selection
-            pauseSelection = PauseSelection.CONTINUE;
+            pauseSelection = PauseSelection.Continue;
 
             // Initialize Text
-            pausedText = new Text("PAUSED", data.asset.gameFont, 50);
-            pausedText.Position = new Vector2f((Constants.WIN_WIDTH / 2) - (pausedText.GetGlobalBounds().Width / 2), Constants.WIN_HEIGHT / 10);
-            continueText = new Text("Continue", data.asset.gameFont);
-            continueText.Position = new Vector2f((Constants.WIN_WIDTH / 2) - (continueText.GetGlobalBounds().Width / 2), (Constants.WIN_HEIGHT / 2) - 50);
-            restartText = new Text("Restart", data.asset.gameFont);
-            restartText.Position = new Vector2f((Constants.WIN_WIDTH / 2) - (restartText.GetGlobalBounds().Width / 2), (Constants.WIN_HEIGHT / 2) + 50);
-            quitText = new Text("Quit", data.asset.gameFont);
-            quitText.Position = new Vector2f((Constants.WIN_WIDTH / 2) - (quitText.GetGlobalBounds().Width / 2), (Constants.WIN_HEIGHT / 2) + 150);
-            moveSound = new Sound(data.asset.menuMoveSound);
-            selectSound = new Sound(data.asset.menuSelectSound);
+            _pausedText = new Text("PAUSED", data.Asset.GameFont, 50);
+            _pausedText.Position = new Vector2f((Constants.WindowWidth / 2) - (_pausedText.GetGlobalBounds().Width / 2), Constants.WindowHeight / 10);
+            _continueText = new Text("Continue", data.Asset.GameFont);
+            _continueText.Position = new Vector2f((Constants.WindowWidth / 2) - (_continueText.GetGlobalBounds().Width / 2), (Constants.WindowHeight / 2) - 50);
+            _restartText = new Text("Restart", data.Asset.GameFont);
+            _restartText.Position = new Vector2f((Constants.WindowWidth / 2) - (_restartText.GetGlobalBounds().Width / 2), (Constants.WindowHeight / 2) + 50);
+            _quitText = new Text("Quit", data.Asset.GameFont);
+            _quitText.Position = new Vector2f((Constants.WindowWidth / 2) - (_quitText.GetGlobalBounds().Width / 2), (Constants.WindowHeight / 2) + 150);
+            _moveSound = new Sound(data.Asset.MenuMoveSound);
+            _selectSound = new Sound(data.Asset.MenuSelectSound);
         }
 
-        public override void HandleInput(ref GameData data, SFML.Window.KeyEventArgs e)
+        public override void HandleInput(GameData data, SFML.Window.KeyEventArgs e)
         {
             switch (e.Code)
             {
@@ -53,31 +53,31 @@ namespace Tetris
                     ChangeSelection(false);
                     break;
                 case SFML.Window.Keyboard.Key.Return:
-                    EnterSelection(ref data);
+                    EnterSelection(data);
                     break;
                 case SFML.Window.Keyboard.Key.Escape:
-                    pauseSelection = PauseSelection.CONTINUE;
-                    EnterSelection(ref data);
+                    pauseSelection = PauseSelection.Continue;
+                    EnterSelection(data);
                     break;
             }
         }
 
-        public override void Update(ref GameData data)
+        public override void Update(GameData data)
         {
             UpdateSelectionBox();
         }
 
-        public override void Draw(ref GameData data)
+        public override void Draw(GameData data)
         {
-            data.window.Clear();
+            data.Window.Clear();
 
-            data.window.Draw(pausedText);
-            data.window.Draw(continueText);
-            data.window.Draw(restartText);
-            data.window.Draw(quitText);
-            data.window.Draw(selectionBox);
+            data.Window.Draw(_pausedText);
+            data.Window.Draw(_continueText);
+            data.Window.Draw(_restartText);
+            data.Window.Draw(_quitText);
+            data.Window.Draw(selectionBox);
 
-            data.window.Display();
+            data.Window.Display();
         }
 
         public void ChangeSelection(bool up)
@@ -94,47 +94,47 @@ namespace Tetris
                 pauseSelection = (PauseSelection)(((selectionInt + 1) + selectionCount) % selectionCount);
             }
 
-            moveSound.Play();
+            _moveSound.Play();
         }
 
         public void UpdateSelectionBox()
         {
             switch (pauseSelection)
             {
-                case PauseSelection.CONTINUE:
-                    selectionBox = new RectangleShape(new Vector2f(continueText.GetGlobalBounds().Width + 10, (continueText.GetGlobalBounds().Height) * 2));
-                    selectionBox.Position = new Vector2f(continueText.GetGlobalBounds().Left - 6, continueText.GetGlobalBounds().Top - 6);
+                case PauseSelection.Continue:
+                    selectionBox = new RectangleShape(new Vector2f(_continueText.GetGlobalBounds().Width + 10, (_continueText.GetGlobalBounds().Height) * 2));
+                    selectionBox.Position = new Vector2f(_continueText.GetGlobalBounds().Left - 6, _continueText.GetGlobalBounds().Top - 6);
                     break;
-                case PauseSelection.RESTART:
-                    selectionBox = new RectangleShape(new Vector2f(restartText.GetGlobalBounds().Width + 10, (restartText.GetGlobalBounds().Height) * 2));
-                    selectionBox.Position = new Vector2f(restartText.GetGlobalBounds().Left - 6, restartText.GetGlobalBounds().Top - 6);
+                case PauseSelection.Restart:
+                    selectionBox = new RectangleShape(new Vector2f(_restartText.GetGlobalBounds().Width + 10, (_restartText.GetGlobalBounds().Height) * 2));
+                    selectionBox.Position = new Vector2f(_restartText.GetGlobalBounds().Left - 6, _restartText.GetGlobalBounds().Top - 6);
                     break;
-                case PauseSelection.QUIT:
-                    selectionBox = new RectangleShape(new Vector2f(quitText.GetGlobalBounds().Width + 10, (quitText.GetGlobalBounds().Height) * 2));
-                    selectionBox.Position = new Vector2f(quitText.GetGlobalBounds().Left - 6, quitText.GetGlobalBounds().Top - 6);
+                case PauseSelection.Quit:
+                    selectionBox = new RectangleShape(new Vector2f(_quitText.GetGlobalBounds().Width + 10, (_quitText.GetGlobalBounds().Height) * 2));
+                    selectionBox.Position = new Vector2f(_quitText.GetGlobalBounds().Left - 6, _quitText.GetGlobalBounds().Top - 6);
                     break;
             }
 
             selectionBox.FillColor = new Color(255, 255, 255, 60);
         }
 
-        public void EnterSelection(ref GameData data)
+        public void EnterSelection(GameData data)
         {
             switch (pauseSelection)
             {
-                case PauseSelection.CONTINUE:
-                    data.state.RemoveState();
+                case PauseSelection.Continue:
+                    data.State.RemoveState();
                     break;
-                case PauseSelection.RESTART:
-                    data.state.AddState(new GamePlayState(), true);
+                case PauseSelection.Restart:
+                    data.State.AddState(new GamePlayState(), true);
                     break;
-                case PauseSelection.QUIT:
-                    data.state.RemoveState();
-                    data.state.AddState(new MenuState(), true);
+                case PauseSelection.Quit:
+                    data.State.RemoveState();
+                    data.State.AddState(new MenuState(), true);
                     break;
             }
 
-            selectSound.Play();
+            _selectSound.Play();
         }
     }
 }

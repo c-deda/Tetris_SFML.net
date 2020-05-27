@@ -5,35 +5,35 @@ namespace Tetris
 {
     public class AssetManager
     {
-        public Texture backgroundTexture { get; }
-        public Texture blocksTexture { get; }
-        public Texture outlineTexture { get; }
-        public Texture previewImageTexture { get; }
-        public Font menuFont { get; }
-        public Font gameFont { get; }
-        public SoundBuffer menuMoveSound { get; }
-        public SoundBuffer menuSelectSound { get; }
-        public SoundBuffer lineClearSound { get; }
-        public SoundBuffer gameOverSound { get; }
-        public SoundBuffer rotateSound { get; }
+        public Texture BackgroundTexture { get; }
+        public Texture BlocksTexture { get; }
+        public Texture OutlineTexture { get; }
+        public Texture PreviewImageTexture { get; }
+        public Font MenuFont { get; }
+        public Font GameFont { get; }
+        public SoundBuffer MenuMoveSound { get; }
+        public SoundBuffer MenuSelectSound { get; }
+        public SoundBuffer LineClearSound { get; }
+        public SoundBuffer GameOverSound { get; }
+        public SoundBuffer RotateSound { get; }
 
         public AssetManager()
         {
             // Load Textures
-            backgroundTexture = new Texture(Constants.BACKGROUNDS_PATH);
-            blocksTexture = new Texture(Constants.BLOCKS_PATH);
-            outlineTexture = new Texture(Constants.OUTLINE_PATH);
-            previewImageTexture = new Texture(Constants.TETRIMINOS_PATH);
+            BackgroundTexture = new Texture(Constants.BackgroundPath);
+            BlocksTexture = new Texture(Constants.BlocksPath);
+            OutlineTexture = new Texture(Constants.OutlinePath);
+            PreviewImageTexture = new Texture(Constants.TetriminosPath);
 
             // Load Fonts
-            gameFont = new Font(Constants.VCR_PATH);
+            GameFont = new Font(Constants.GameFontPath);
 
             // Load Sounds
-            menuMoveSound = new SoundBuffer(Constants.UI_MOVE_PATH);
-            menuSelectSound = new SoundBuffer(Constants.UI_SELECT_PATH);
-            lineClearSound = new SoundBuffer(Constants.LINE_CLEAR_PATH);
-            gameOverSound = new SoundBuffer(Constants.GAME_OVER_PATH);
-            rotateSound = new SoundBuffer(Constants.ROTATE_PATH);
+            MenuMoveSound = new SoundBuffer(Constants.UIMoveSoundPath);
+            MenuSelectSound = new SoundBuffer(Constants.UISelectSoundPath);
+            LineClearSound = new SoundBuffer(Constants.LinesClearSoundPath);
+            GameOverSound = new SoundBuffer(Constants.GameOverSoundPath);
+            RotateSound = new SoundBuffer(Constants.RotateSoundPath);
         }
 
 

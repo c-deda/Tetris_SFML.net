@@ -2,12 +2,12 @@
 {
     public abstract class State
     {
-        public abstract void Init(ref GameData data);
+        public abstract void Init(GameData data);
 
-        public abstract void HandleInput(ref GameData data, SFML.Window.KeyEventArgs e);
+        public abstract void HandleInput(GameData data, SFML.Window.KeyEventArgs e);
 
-        public abstract void Update(ref GameData data);
+        public abstract void Update(GameData data);
 
-        public abstract void Draw(ref GameData data);
+        public abstract void Draw(GameData data);
     }
 }

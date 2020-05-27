@@ -7,70 +7,68 @@ namespace Tetris
 {
     public class GamePlayState : State
     {
-        public Tower tower { get; set; }
-        public int level { get; set; }
-        public int totalLinesCleared { get; set; }
-        public int frameCount { get; set; }
-        public Tetrimino activePiece { get; set; }
-        public Tetrimino activeOutline { get; set; }
-        public Tetrimino nextPiece { get; set; }
-        public Tetrimino heldPiece { get; set; }
-        public BlockValue lastPiece { get; set; }
-        public BlockValue[] randomPieceBag { get; set; }
-        public int randomPieceIndex { get; set; }
-        public bool canHold { get; set; }
+        private Tower _tower;
+        private int _level;
+        private int _totalLinesCleared;
+        private int _frameCount;
+        private Tetrimino _activePiece;
+        private Tetrimino _activeOutline;
+        private Tetrimino _nextPiece;
+        private Tetrimino _heldPiece;
+        private BlockValue[] _randomPieceBag;
+        private int _randomPieceIndex;
+        private bool _canHold;
 
-        public Sprite gameBackground { get; set; }
-        public Sprite blocks { get; set; }
-        public Sprite outline { get; set; }
-        public Sprite nextPieceImg { get; set; }
-        public Sprite heldPieceImg { get; set; }
-        public Text nextText { get; set; }
-        public Text holdText { get; set; }
-        public Text linesLabelText { get; set; }
-        public Text linesValueText { get; set; }
-        public Text levelLabelText { get; set; }
-        public Text levelValueText { get; set; }
-        public Sound blockLandingSound { get; set; }
-        public Sound gameOverSound { get; set; }
-        public Sound rotateSound { get; set; }
-        public Sound holdSound { get; set; }
-        public Sound lineClearSound { get; set; }
+        private Sprite _gameBackground;
+        private Sprite _blocks;
+        private Sprite _outline;
+        private Sprite _nextPieceImg;
+        private Sprite _heldPieceImg;
+        private Text _nextText;
+        private Text _holdText;
+        private Text _linesLabelText;
+        private Text _linesValueText;
+        private Text _levelLabelText;
+        private Text _levelValueText;
+        private Sound _blockLandingSound;
+        private Sound _gameOverSound;
+        private Sound _rotateSound;
+        private Sound _holdSound;
+        private Sound _lineClearSound;
 
-        public override void Init(ref GameData data)
+        public override void Init(GameData data)
         {
-            // Setup Assets
             // Background
-            gameBackground = new Sprite(data.asset.backgroundTexture, new IntRect(Constants.WIN_WIDTH, 0, Constants.WIN_WIDTH, Constants.WIN_HEIGHT));
+            _gameBackground = new Sprite(data.Asset.BackgroundTexture, new IntRect(Constants.WindowWidth, 0, Constants.WindowWidth, Constants.WindowHeight));
             // Blocks
-            blocks = new Sprite(data.asset.blocksTexture);
+            _blocks = new Sprite(data.Asset.BlocksTexture);
             // Outline
-            outline = new Sprite(data.asset.outlineTexture);
+            _outline = new Sprite(data.Asset.OutlineTexture);
             // Preview Images
-            nextPieceImg = new Sprite(data.asset.previewImageTexture);
-            nextPieceImg.Position = new Vector2f(Constants.BLOCK_SIZE * 16, Constants.BLOCK_SIZE * 3);
-            heldPieceImg = new Sprite(data.asset.previewImageTexture);
-            heldPieceImg.Position = new Vector2f(Constants.BLOCK_SIZE, Constants.BLOCK_SIZE * 3);
+            _nextPieceImg = new Sprite(data.Asset.PreviewImageTexture);
+            _nextPieceImg.Position = new Vector2f(Constants.BlockSize * 16, Constants.BlockSize * 3);
+            _heldPieceImg = new Sprite(data.Asset.PreviewImageTexture);
+            _heldPieceImg.Position = new Vector2f(Constants.BlockSize, Constants.BlockSize * 3);
             // Text
-            holdText = new Text("Hold", data.asset.gameFont);
-            holdText.Position = new Vector2f(Constants.BLOCK_SIZE, Constants.BLOCK_SIZE / 2);
-            nextText = new Text("Next", data.asset.gameFont);
-            nextText.Position = new Vector2f((Constants.WIN_WIDTH - Constants.BLOCK_SIZE) - nextText.GetGlobalBounds().Width, Constants.BLOCK_SIZE / 2);
-            levelLabelText = new Text("Level", data.asset.gameFont);
-            levelLabelText.Position = new Vector2f((levelLabelText.GetGlobalBounds().Width / 2) - Constants.BLOCK_SIZE, Constants.BLOCK_SIZE * 10);
-            linesLabelText = new Text("Lines", data.asset.gameFont);
-            linesLabelText.Position = new Vector2f(Constants.WIN_WIDTH - linesLabelText.GetGlobalBounds().Width - (Constants.BLOCK_SIZE / 2), Constants.BLOCK_SIZE * 10);
+            _holdText = new Text("Hold", data.Asset.GameFont);
+            _holdText.Position = new Vector2f(Constants.BlockSize, Constants.BlockSize / 2);
+            _nextText = new Text("Next", data.Asset.GameFont);
+            _nextText.Position = new Vector2f((Constants.WindowWidth - Constants.BlockSize) - _nextText.GetGlobalBounds().Width, Constants.BlockSize / 2);
+            _levelLabelText = new Text("Level", data.Asset.GameFont);
+            _levelLabelText.Position = new Vector2f((_levelLabelText.GetGlobalBounds().Width / 2) - Constants.BlockSize, Constants.BlockSize * 10);
+            _linesLabelText = new Text("Lines", data.Asset.GameFont);
+            _linesLabelText.Position = new Vector2f(Constants.WindowWidth - _linesLabelText.GetGlobalBounds().Width - (Constants.BlockSize / 2), Constants.BlockSize * 10);
             // Sounds
-            blockLandingSound = new Sound(data.asset.menuMoveSound);
-            holdSound = new Sound(data.asset.menuSelectSound);
-            rotateSound = new Sound(data.asset.rotateSound);
-            gameOverSound = new Sound(data.asset.gameOverSound);
-            lineClearSound = new Sound(data.asset.lineClearSound);
+            _blockLandingSound = new Sound(data.Asset.MenuMoveSound);
+            _holdSound = new Sound(data.Asset.MenuSelectSound);
+            _rotateSound = new Sound(data.Asset.RotateSound);
+            _gameOverSound = new Sound(data.Asset.GameOverSound);
+            _lineClearSound = new Sound(data.Asset.LineClearSound);
 
-            ResetGame();
+            InitGameData();
         }
 
-        public override void HandleInput(ref GameData data, SFML.Window.KeyEventArgs e)
+        public override void HandleInput(GameData data, SFML.Window.KeyEventArgs e)
         {
             switch (e.Code)
             {
@@ -81,148 +79,160 @@ namespace Tetris
                     LegalMoveLeftRight(1);
                     break;
                 case SFML.Window.Keyboard.Key.Down:
-                    LegalMoveUpDown(activePiece, 1);
+                    LegalMoveUpDown(_activePiece, 1);
                     break;
                 case SFML.Window.Keyboard.Key.F:
-                    TryRotate(activePiece, true);
+                    TryRotate(_activePiece, true);
                     break;
                 case SFML.Window.Keyboard.Key.D:
-                    TryRotate(activePiece, false);
+                    TryRotate(_activePiece, false);
                     break;
                 case SFML.Window.Keyboard.Key.LShift:
                     HoldPiece();
                     break;
                 case SFML.Window.Keyboard.Key.Space:
-                    HardDrop(activePiece, 1);
+                    HardDrop(_activePiece, 1);
                     DropActivePiece();
                     break;
                 case SFML.Window.Keyboard.Key.Escape:
-                    data.state.AddState(new PauseState(), false);
+                    data.State.AddState(new PauseState(), false);
                     break;
             }
         }
 
-        public override void Update(ref GameData data)
+        public override void Update(GameData data)
         {
             // Check Game Over
             if (IsGameOver())
             {
-                gameOverSound.Play();
-                data.state.AddState(new GameOverState(), true);
+                _gameOverSound.Play();
+                data.State.AddState(new GameOverState(), true);
             }
             // Gravity
-            frameCount++;
-            if (frameCount >= Constants.MIN_GRAVITY - (level * Constants.GRAVITY_MOD))
+            _frameCount++;
+            if (_frameCount >= Constants.MinimumGravity - (_level * Constants.GravityModifier))
             {
-                LegalMoveUpDown(activePiece, 1);
-                frameCount = 0;
+                LegalMoveUpDown(_activePiece, 1);
+                _frameCount = 0;
             }
             // Check And Clear Lines
-            if (tower.clearState == ClearState.CLEAR)
+            if (_tower.ClearState == ClearState.Clear)
             {
-                lineClearSound.Play();
+                _lineClearSound.Play();
             }
-            else if (tower.clearState == ClearState.MOVE)
+            else if (_tower.ClearState == ClearState.Move)
             {
-                blockLandingSound.Play();
+                _blockLandingSound.Play();
             }
-            totalLinesCleared += tower.ClearCycle();
+            _totalLinesCleared += _tower.ClearCycle();
 
             CheckLevelUp();
 
             UpdateOutline();
         }
 
-        public override void Draw(ref GameData data)
+        private void UpdateText(GameData data)
         {
-            data.window.Clear();
+            _levelValueText = new Text(_level.ToString(), data.Asset.GameFont);
+            _levelValueText.Position = new Vector2f((_levelLabelText.GetGlobalBounds().Width / 2), Constants.BlockSize * 12);
+            _linesValueText = new Text(_totalLinesCleared.ToString(), data.Asset.GameFont);
+            _linesValueText.Position = new Vector2f(Constants.WindowWidth - _linesLabelText.GetGlobalBounds().Width + (Constants.BlockSize / 2), Constants.BlockSize * 12);
+        }
 
-            data.window.Draw(gameBackground);
+        public override void Draw(GameData data)
+        {
+            data.Window.Clear();
+
+            data.Window.Draw(_gameBackground);
+
             // Preview Images
-            DrawPreviewImage(ref data, nextPieceImg, nextPiece);
-            DrawPreviewImage(ref data, heldPieceImg, heldPiece);
-            // Pile
-            for (int row = 0; row < Constants.TOWER_HEIGHT; row++)
-            {
-                for (int col = 0; col < Constants.TOWER_WIDTH; col++)
-                {
-                    BlockValue towerValue = tower.GetTile(row, col);
+            DrawPreviewImage(data, _nextPieceImg, _nextPiece);
+            DrawPreviewImage(data, _heldPieceImg, _heldPiece);
 
-                    if (towerValue != BlockValue.EMPTY)
+            DrawPile(data);
+
+            // Draw Active Outline
+            DrawActivePiece(data, _activeOutline);
+
+            // Draw Active Block
+            DrawActivePiece(data, _activePiece);
+
+            // Text
+            UpdateText(data);
+            data.Window.Draw(_holdText);
+            data.Window.Draw(_nextText);
+            data.Window.Draw(_levelLabelText);
+            data.Window.Draw(_levelValueText);
+            data.Window.Draw(_linesLabelText);
+            data.Window.Draw(_linesValueText);
+
+            data.Window.Display();
+        }
+
+        private void DrawPile(GameData data)
+        {
+            for (int row = 0; row < Constants.TowerHeight; row++)
+            {
+                for (int col = 0; col < Constants.TowerWidth; col++)
+                {
+                    BlockValue towerValue = _tower.GetTile(row, col);
+
+                    if (towerValue != BlockValue.Empty)
                     {
-                        DrawBlock(ref data, blocks, towerValue, row, col);
+                        DrawBlock(data, _blocks, towerValue, row, col);
                     }
                 }
             }
-            // Draw Active Outline
-            for (int i = 0; i < 4; i++)
-            {
-                Block b = activeOutline.GetBlockAt(i);
-
-                DrawBlock(ref data, outline, b.type, b.GetRow(), b.GetCol());
-            }
-            // Draw Active Block
-            for (int i = 0; i < 4; i++)
-            {
-                Block b = activePiece.GetBlockAt(i);
-
-                DrawBlock(ref data, blocks, b.type, b.GetRow(), b.GetCol());
-            }
-
-            // Text
-            levelValueText = new Text(level.ToString(), data.asset.gameFont);
-            levelValueText.Position = new Vector2f((levelLabelText.GetGlobalBounds().Width / 2), Constants.BLOCK_SIZE * 12);
-            linesValueText = new Text(totalLinesCleared.ToString(), data.asset.gameFont);
-            linesValueText.Position = new Vector2f(Constants.WIN_WIDTH - linesLabelText.GetGlobalBounds().Width + (Constants.BLOCK_SIZE / 2), Constants.BLOCK_SIZE * 12);
-
-            data.window.Draw(holdText);
-            data.window.Draw(nextText);
-            data.window.Draw(levelLabelText);
-            data.window.Draw(levelValueText);
-            data.window.Draw(linesLabelText);
-            data.window.Draw(linesValueText);
-
-            data.window.Display();
         }
 
-        private void DrawBlock(ref GameData data, Sprite toDraw, BlockValue blockValue, int row, int col)
+        private void DrawActivePiece(GameData data, Tetrimino piece)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                Block b = piece.GetBlockAt(i);
+
+                DrawBlock(data, _outline, b.Type, b.GetRow(), b.GetCol());
+            }
+        }
+
+        private void DrawBlock(GameData data, Sprite toDraw, BlockValue blockValue, int row, int col)
         {
             int textureOffset = -1;
 
             switch (blockValue)
             {
-                case BlockValue.ISHAPE:
+                case BlockValue.IShape:
                     textureOffset = 0;
                     break;
-                case BlockValue.LSHAPE:
+                case BlockValue.LShape:
                     textureOffset = 1;
                     break;
-                case BlockValue.JSHAPE:
+                case BlockValue.JShape:
                     textureOffset = 2;
                     break;
-                case BlockValue.SSHAPE:
+                case BlockValue.SShape:
                     textureOffset = 3;
                     break;
-                case BlockValue.ZSHAPE:
+                case BlockValue.ZShape:
                     textureOffset = 4;
                     break;
-                case BlockValue.TSHAPE:
+                case BlockValue.TShape:
                     textureOffset = 5;
                     break;
-                case BlockValue.OSHAPE:
+                case BlockValue.OShape:
                     textureOffset = 6;
                     break;
-                case BlockValue.CLEARED:
+                case BlockValue.Cleared:
                     textureOffset = 7;
                     break;
             }
 
-            toDraw.TextureRect = new IntRect(textureOffset * Constants.BLOCK_SIZE, 0, Constants.BLOCK_SIZE, Constants.BLOCK_SIZE);
-            toDraw.Position = new Vector2f((5 * Constants.BLOCK_SIZE) + (col * Constants.BLOCK_SIZE), Constants.BLOCK_SIZE + (row * Constants.BLOCK_SIZE));
-            data.window.Draw(toDraw);
+            toDraw.TextureRect = new IntRect(textureOffset * Constants.BlockSize, 0, Constants.BlockSize, Constants.BlockSize);
+            toDraw.Position = new Vector2f((5 * Constants.BlockSize) + (col * Constants.BlockSize), Constants.BlockSize + (row * Constants.BlockSize));
+            data.Window.Draw(toDraw);
         }
 
-        public void DrawPreviewImage(ref GameData data, Sprite pieceImg, Tetrimino piece)
+        public void DrawPreviewImage(GameData data, Sprite pieceImg, Tetrimino piece)
         {
             if (piece != null)
             {
@@ -230,48 +240,48 @@ namespace Tetris
 
                 switch (piece.GetBlockValue())
                 {
-                    case BlockValue.ISHAPE:
+                    case BlockValue.IShape:
                         textureOffset = 0;
                         break;
-                    case BlockValue.LSHAPE:
+                    case BlockValue.LShape:
                         textureOffset = 1;
                         break;
-                    case BlockValue.JSHAPE:
+                    case BlockValue.JShape:
                         textureOffset = 2;
                         break;
-                    case BlockValue.SSHAPE:
+                    case BlockValue.SShape:
                         textureOffset = 3;
                         break;
-                    case BlockValue.ZSHAPE:
+                    case BlockValue.ZShape:
                         textureOffset = 4;
                         break;
-                    case BlockValue.TSHAPE:
+                    case BlockValue.TShape:
                         textureOffset = 5;
                         break;
-                    case BlockValue.OSHAPE:
+                    case BlockValue.OShape:
                         textureOffset = 6;
                         break;
                 }
 
-                pieceImg.TextureRect = new IntRect(textureOffset * Constants.PREV_IMG_SIZE, 0, Constants.PREV_IMG_SIZE, Constants.PREV_IMG_SIZE);
-                data.window.Draw(pieceImg);
+                pieceImg.TextureRect = new IntRect(textureOffset * Constants.PreviewImageSize, 0, Constants.PreviewImageSize, Constants.PreviewImageSize);
+                data.Window.Draw(pieceImg);
             }
         }
 
-        public void ResetGame()
+        public void InitGameData()
         {
-            tower = new Tower();
-            level = 0;
-            totalLinesCleared = 0;
-            randomPieceIndex = 0;
-            canHold = true;
-            randomPieceBag = new BlockValue[] { BlockValue.ISHAPE,
-                                                BlockValue.JSHAPE,
-                                                BlockValue.LSHAPE,
-                                                BlockValue.OSHAPE,
-                                                BlockValue.SSHAPE,
-                                                BlockValue.TSHAPE,
-                                                BlockValue.ZSHAPE };
+            _tower = new Tower();
+            _level = 0;
+            _totalLinesCleared = 0;
+            _randomPieceIndex = 0;
+            _canHold = true;
+            _randomPieceBag = new BlockValue[] { BlockValue.IShape,
+                                                 BlockValue.JShape,
+                                                 BlockValue.LShape,
+                                                 BlockValue.OShape,
+                                                 BlockValue.SShape,
+                                                 BlockValue.TShape,
+                                                 BlockValue.ZShape };
 
             ShuffleRandomPieceBag();
             SpawnNextPiece();
@@ -284,36 +294,36 @@ namespace Tetris
             for (int i = 0; i < 7; i++)
             {
                 int swapWith = rand.Next(7);
-                BlockValue temp = randomPieceBag[swapWith];
-                randomPieceBag[swapWith] = randomPieceBag[i];
-                randomPieceBag[i] = temp;
+                BlockValue temp = _randomPieceBag[swapWith];
+                _randomPieceBag[swapWith] = _randomPieceBag[i];
+                _randomPieceBag[i] = temp;
             }
         }
 
         public void CheckLevelUp()
         {
-            if (totalLinesCleared >= level * Constants.LINES_MOD)
+            if (_totalLinesCleared >= _level * Constants.LinesModifier)
             {
-                level++;
+                _level++;
             }
         }
 
         public bool IsGameOver()
         {
-            return tower.CheckPieceOverlap(activePiece);
+            return _tower.CheckPieceOverlap(_activePiece);
         }
 
         public void LegalMoveLeftRight(int moveVal)
         {
             // Copy Active Piece And Simulate Move
-            Tetrimino copy = GeneratePiece(activePiece.GetBlockValue());
-            activePiece.MakeCopy(copy);
+            Tetrimino copy = GeneratePiece(_activePiece.GetBlockValue());
+            _activePiece.MakeCopy(copy);
             copy.MoveLeftRight(moveVal);
 
             // If In Bounds, Perform Actual Move
-            if (copy.IsInBounds(tower))
+            if (copy.IsInBounds(_tower))
             {
-                activePiece.MoveLeftRight(moveVal);
+                _activePiece.MoveLeftRight(moveVal);
             }
         }
 
@@ -322,7 +332,7 @@ namespace Tetris
             // Check For Collisions
             if (!CheckForMoveCollision(piece, moveVal))
             {
-                activePiece.MoveUpDown(moveVal);
+                _activePiece.MoveUpDown(moveVal);
             }
             else
             {
@@ -334,61 +344,61 @@ namespace Tetris
         {
             if (CheckForMoveCollision(piece, moveVal))
             {
-                piece.MoveUpDown(moveVal - 1);
+                piece.MoveUpDown(moveVal-1);
             }
             else
             {
-                HardDrop(piece, moveVal + 1);
+                HardDrop(piece, moveVal+1);
             }
         }
 
         public void UpdateOutline()
         {
             // Hard Drop Preview
-            activePiece.MakeCopy(activeOutline);
-            HardDrop(activeOutline, 1);
+            _activePiece.MakeCopy(_activeOutline);
+            HardDrop(_activeOutline, 1);
         }
 
         public void SpawnNextPiece()
         {
-            if (randomPieceIndex > 6)
+            if (_randomPieceIndex > 6)
             {
-                randomPieceIndex = 0;
+                _randomPieceIndex = 0;
                 ShuffleRandomPieceBag();
             }
 
-            if (nextPiece == null)
+            if (_nextPiece == null)
             {
-                nextPiece = GeneratePiece(randomPieceBag[randomPieceIndex]);
-                randomPieceIndex++;
+                _nextPiece = GeneratePiece(_randomPieceBag[_randomPieceIndex]);
+                _randomPieceIndex++;
             }
 
-            activePiece = nextPiece;
-            activePiece.Spawn();
-            nextPiece = GeneratePiece(randomPieceBag[randomPieceIndex]);
-            randomPieceIndex++;
+            _activePiece = _nextPiece;
+            _activePiece.Spawn();
+            _nextPiece = GeneratePiece(_randomPieceBag[_randomPieceIndex]);
+            _randomPieceIndex++;
 
             // Create Piece For Outline
-            activeOutline = GeneratePiece(activePiece.GetBlockValue());
+            _activeOutline = GeneratePiece(_activePiece.GetBlockValue());
         }
 
         public Tetrimino GeneratePiece(BlockValue shape)
         {
             switch (shape)
             {
-                case BlockValue.ISHAPE:
+                case BlockValue.IShape:
                     return new IShape();
-                case BlockValue.LSHAPE:
+                case BlockValue.LShape:
                     return new LShape();
-                case BlockValue.JSHAPE:
+                case BlockValue.JShape:
                     return new JShape();
-                case BlockValue.SSHAPE:
+                case BlockValue.SShape:
                     return new SShape();
-                case BlockValue.ZSHAPE:
+                case BlockValue.ZShape:
                     return new ZShape();
-                case BlockValue.TSHAPE:
+                case BlockValue.TShape:
                     return new TShape();
-                case BlockValue.OSHAPE:
+                case BlockValue.OShape:
                     return new OShape();
             }
 
@@ -397,28 +407,28 @@ namespace Tetris
 
         public void HoldPiece()
         {
-            if (canHold)
+            if (_canHold)
             {
-                activePiece.Despawn();
+                _activePiece.Despawn();
 
-                if (heldPiece == null)
+                if (_heldPiece == null)
                 {
-                    heldPiece = activePiece;
+                    _heldPiece = _activePiece;
                     SpawnNextPiece();
                 }
                 else
                 {
-                    Tetrimino tempPiece = heldPiece;
-                    heldPiece = activePiece;
-                    activePiece = tempPiece;
-                    activePiece.Spawn();
-                    activeOutline = GeneratePiece(activePiece.GetBlockValue());
+                    Tetrimino tempPiece = _heldPiece;
+                    _heldPiece = _activePiece;
+                    _activePiece = tempPiece;
+                    _activePiece.Spawn();
+                    _activeOutline = GeneratePiece(_activePiece.GetBlockValue());
                 }
 
-                holdSound.Play();
+                _holdSound.Play();
             }
 
-            canHold = false;
+            _canHold = false;
         }
 
         public bool CheckForMoveCollision(Tetrimino piece, int moveVal)
@@ -429,13 +439,13 @@ namespace Tetris
             copy.MoveUpDown(moveVal);
 
             // Check If Block Collides With Pile
-            if (tower.CheckPieceOverlap(copy))
+            if (_tower.CheckPieceOverlap(copy))
             {
                 return true;
             }
 
             // Check If Block Collides With Bottom
-            if (!copy.IsInBounds(tower))
+            if (!copy.IsInBounds(_tower))
             {
                 return true;
             }
@@ -445,10 +455,10 @@ namespace Tetris
 
         public void DropActivePiece()
         {
-            blockLandingSound.Play();
-            activePiece.CopyValuesToTower(tower);
+            _blockLandingSound.Play();
+            _activePiece.CopyValuesToTowerData(_tower);
             SpawnNextPiece();
-            canHold = true;
+            _canHold = true;
         }
 
         public void TryRotate(Tetrimino piece, bool clockwise)
@@ -459,7 +469,7 @@ namespace Tetris
             copy.Rotate(clockwise);
 
             // If Everything Looks Good, Rotate Active Piece
-            if (copy.IsInBounds(tower))
+            if (copy.IsInBounds(_tower))
             {
                 piece.Rotate(clockwise);
             }
@@ -468,7 +478,7 @@ namespace Tetris
             {
                 int rotationOffsetValue = -1;
 
-                while (!copy.IsInBounds(tower))
+                while (!copy.IsInBounds(_tower))
                 {
                     rotationOffsetValue++;
 
@@ -530,7 +540,7 @@ namespace Tetris
                 }
             }
 
-            rotateSound.Play();
+            _rotateSound.Play();
         }
     }
 }

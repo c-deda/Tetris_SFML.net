@@ -2,28 +2,28 @@
 {
     public static class Constants
     {
-        public const string WIN_TITLE = "Tetris";
-        public const int WIN_HEIGHT = 660;
-        public const int WIN_WIDTH = 600;
-        public const int FRAMERATE = 60;
-        public const int TOWER_HEIGHT = 20;
-        public const int TOWER_WIDTH = 10;
-        public const int ROTATION_VALUES = 4;
-        public const int DESPAWNED_POS = -10;
-        public const int BLOCK_SIZE = 30;
-        public const int PREV_IMG_SIZE = 90;
-        public const int MIN_GRAVITY = 55;
-        public const int GRAVITY_MOD = 5;
-        public const int LINES_MOD = 10;
-        public const string BLOCKS_PATH = "../../Assets/Textures/Tetris_Blocks.png";
-        public const string OUTLINE_PATH = "../../Assets/Textures/Tetris_Outlines.png";
-        public const string BACKGROUNDS_PATH = "../../Assets/Textures/Tetris_Backgrounds.png";
-        public const string TETRIMINOS_PATH = "../../Assets/Textures/Tetris_Tetriminos.png";
-        public const string VCR_PATH = "../../Assets/Fonts/VCR.ttf";
-        public const string UI_MOVE_PATH = "../../Assets/Sounds/UI_Move.wav";
-        public const string UI_SELECT_PATH = "../../Assets/Sounds/UI_Select.wav";
-        public const string LINE_CLEAR_PATH = "../../Assets/Sounds/Line_Clear.wav";
-        public const string GAME_OVER_PATH = "../../Assets/Sounds/Game_Over.wav";
-        public const string ROTATE_PATH = "../../Assets/Sounds/Rotate.wav";
+        public const string WindowTitle = "Tetris";
+        public const int WindowHeight = 660;
+        public const int WindowWidth = 600;
+        public const int Framerate = 60;
+        public const int TowerHeight = 20;
+        public const int TowerWidth = 10;
+        public const int TotalRotationValues = 4;
+        public const int DespawnedPosition = -10;
+        public const int BlockSize = 30;
+        public const int PreviewImageSize = 90;
+        public const int MinimumGravity = 55;
+        public const int GravityModifier = 5;
+        public const int LinesModifier = 10;
+        public const string BlocksPath = "../../Assets/Textures/Tetris_Blocks.png";
+        public const string OutlinePath = "../../Assets/Textures/Tetris_Outlines.png";
+        public const string BackgroundPath = "../../Assets/Textures/Tetris_Backgrounds.png";
+        public const string TetriminosPath = "../../Assets/Textures/Tetris_Tetriminos.png";
+        public const string GameFontPath = "../../Assets/Fonts/VCR.ttf";
+        public const string UIMoveSoundPath = "../../Assets/Sounds/UI_Move.wav";
+        public const string UISelectSoundPath = "../../Assets/Sounds/UI_Select.wav";
+        public const string LinesClearSoundPath = "../../Assets/Sounds/Line_Clear.wav";
+        public const string GameOverSoundPath = "../../Assets/Sounds/Game_Over.wav";
+        public const string RotateSoundPath = "../../Assets/Sounds/Rotate.wav";
     }
 }
